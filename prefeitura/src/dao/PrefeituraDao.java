@@ -17,14 +17,12 @@ import java.util.List;
  */
 public class PrefeituraDao {
      public static boolean inserir(Prefeitura objeto) {
-        String sql = "INSERT INTO prefeitura ( codigo, nome, endereco, nrdefuncionarios) VALUES ( ?, ?, ?, ?)";
+        String sql = "INSERT INTO prefeitura ( nome, endereco, nrdefuncionarios) VALUES ( ?, ?, ?)";
         try {
             PreparedStatement ps = conexao.Conexao.getConexao().prepareStatement(sql);
-            
-            ps.setInt(1, objeto.getCodigo());
-            ps.setString(2, objeto.getNome());
-            ps.setString(3, objeto.getEndereco());
-            ps.setInt(4, objeto.getNrdefuncionarios());
+            ps.setString(1, objeto.getNome());
+            ps.setString(2, objeto.getEndereco());
+            ps.setInt(3, objeto.getNrdefuncionarios());
             ps.executeUpdate();
             return true;
         } catch (SQLException | ClassNotFoundException ex) {
@@ -47,6 +45,36 @@ public class PrefeituraDao {
             JOptionPane.showMessageDialog(null, "Erro!");
         }
     }
+     
+       public static boolean alterar(Prefeitura objeto) {
+        String sql = "UPDATE prefeitura SET nome = ?, endereco = ?, nrdefuncionarios = ? WHERE codigo=?";
+        try {
+            PreparedStatement ps = conexao.Conexao.getConexao().prepareStatement(sql);
+            ps.setString(1, objeto.getNome()); 
+            ps.setString(2, objeto.getEndereco());
+            ps.setInt(3, objeto.getNrdefuncionarios());
+            ps.setInt(4, objeto.getCodigo());
+            ps.executeUpdate();
+            return true;
+        } catch (SQLException | ClassNotFoundException ex) {
+            System.out.println(ex.getMessage());
+            return false;
+        }
+    }
+    
+    public static boolean excluir(Prefeitura objeto) {
+        String sql = "DELETE FROM prefeitura WHERE codigo=?";
+        try {
+            PreparedStatement ps = conexao.Conexao.getConexao().prepareStatement(sql);
+            ps.setInt(1, objeto.getCodigo());
+            ps.executeUpdate();
+            return true;
+        } catch (SQLException | ClassNotFoundException ex) {
+            System.out.println(ex.getMessage());
+            return false;
+        }
+    }
+       
      public static List<Prefeitura> consultar() {
         List<Prefeitura> resultados = new ArrayList<>();
         //editar o SQL conforme a entidade
@@ -58,10 +86,10 @@ public class PrefeituraDao {
             while (rs.next()) {
                 Prefeitura objeto = new Prefeitura();
                 //definir um set para cada atributo da entidade, cuidado com o tipo
-                objeto.setCodigo(rs.getInt("CÓDIGO"));
-                objeto.setNome(rs.getString("NOME"));
-                objeto.setEndereco(rs.getString("ENDEREÇO"));
-                objeto.setNrdefuncionarios(rs.getInt("FUNCIONÁRIOS"));
+                objeto.setCodigo(rs.getInt("codigo"));
+                objeto.setNome(rs.getString("nome"));
+                objeto.setEndereco(rs.getString("endereco"));
+                objeto.setNrdefuncionarios(rs.getInt("nrdefuncionarios"));
 
                 
                 resultados.add(objeto);//não mexa nesse, ele adiciona o objeto na lista
@@ -72,4 +100,27 @@ public class PrefeituraDao {
             return null;
         }
 }
+    
+      public static Prefeitura consultar(int primaryKey) {
+        //editar o SQL conforme a entidade
+        String sql = "SELECT codigo, nome, endereco , nrdefuncionario FROM prefeitura WHERE codigo=?";
+        PreparedStatement ps;
+        try {
+            ps = conexao.Conexao.getConexao().prepareStatement(sql);
+            ps.setInt(1, primaryKey);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Prefeitura objeto = new Prefeitura();
+                //definir um set para cada atributo da entidade, cuidado com o tipo
+                objeto.setCodigo(rs.getInt("codigo"));
+                objeto.setNome(rs.getString("nome"));
+                objeto.setEndereco(rs.getString("endereco"));
+                objeto.setNrdefuncionarios(rs.getInt("nrdefuncionarios"));
+                return objeto;//não mexa nesse, ele adiciona o objeto na lista
+            }
+        } catch (SQLException | ClassNotFoundException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return null;
+    }
 }

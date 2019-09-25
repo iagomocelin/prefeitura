@@ -4,13 +4,34 @@
  * and open the template in the editor.
  */
 package tela.manutencao;
+import tela.listagem.ListagemPrefeitura;
 
 /**
  *
  * @author Administrador
  */
 public class ManutencaoPrefeitura extends javax.swing.JDialog {
-
+    public ListagemPrefeitura listagem;
+   
+ //Entrando na Manutenção de Produto para Adicionar um novo Produto (OBS: o nome do método deverá ser o mesmo nome da classe)
+ public ManutencaoPrefeitura(java.awt.Frame parent, boolean modal, ListagemPrefeitura listagem) {
+        super(parent, modal);
+        initComponents();
+        this.listagem = listagem;
+        
+        jtfCodigo.setEnabled(false);  //desabilitando a edição do campo código
+        btnAlterar.setEnabled(false); //desabilitando o botão alterar
+        btnExcluir.setEnabled(false); //desabilitando o botão excluir
+  }
+ 
+ public ManutencaoPrefeitura(java.awt.Frame parent, boolean modal, ListagemPrefeitura listagem, int pk) {
+        super(parent, modal);
+        initComponents();
+        
+        jtfCodigo.setEnabled(false);  //desabilitando a edição do campo código
+        this.listagem = listagem;
+        controlador.ControladorPrefeitura.atualizaCampos(this, pk);//pegando os valores do BD e colocando na tela
+    }
     /**
      * Creates new form ManutencaoPrefeitura
      */
@@ -70,10 +91,25 @@ public class ManutencaoPrefeitura extends javax.swing.JDialog {
         });
 
         btnExcluir.setText("EXCLUIR");
+        btnExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcluirActionPerformed(evt);
+            }
+        });
 
         btnAlterar.setText("ALTERAR");
+        btnAlterar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAlterarActionPerformed(evt);
+            }
+        });
 
         btnAdicionar.setText("ADICIONAR");
+        btnAdicionar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAdicionarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -148,6 +184,20 @@ public class ManutencaoPrefeitura extends javax.swing.JDialog {
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
 dispose();        // TODO add your handling code here:
     }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void btnAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdicionarActionPerformed
+controlador.ControladorPrefeitura.inserir(this);      // TODO add your handling code here:
+    }//GEN-LAST:event_btnAdicionarActionPerformed
+
+    private void btnAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarActionPerformed
+controlador.ControladorPrefeitura.alterar(this);
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnAlterarActionPerformed
+
+    private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
+controlador.ControladorPrefeitura.excluir(this);
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnExcluirActionPerformed
 
     /**
      * @param args the command line arguments
